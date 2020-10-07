@@ -30,7 +30,7 @@ public class JogoDaForca {
 							.println("\nVocê precisa inserir palavras apenas com letras do alfabeto. Tente novamente!");
 				}
 
-			} while (!Pattern.matches("[a-zA-Z ]+", palavra));
+			} while (!Pattern.matches(PADRAO_PALAVRA, palavra));
 
 			lista.write(palavra.toLowerCase());
 			lista.write(String.format("\n"));
