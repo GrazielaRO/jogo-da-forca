@@ -14,7 +14,8 @@ import java.util.Scanner;
 public class JogoDaForca {
 
 	public static String incluirPalavras(Scanner sc, int quantidadepalavras, String nomeArquivo) throws IOException {
-
+		
+		final String PADRAO_PALAVRA = "[a-zA-Z ]+";
 		FileWriter lista = new FileWriter(nomeArquivo);
 		String palavra = "";
 
@@ -24,7 +25,7 @@ public class JogoDaForca {
 				System.out.printf("\nDigite a %dª palavra: ", i + 1);
 				palavra = retiraAcento(sc.nextLine());
 
-				if (!Pattern.matches("[a-zA-Z ]+", palavra)) {
+				if (!Pattern.matches(PADRAO_PALAVRA, palavra)) {
 					System.out
 							.println("\nVocê precisa inserir palavras apenas com letras do alfabeto. Tente novamente!");
 				}
@@ -56,7 +57,7 @@ public class JogoDaForca {
 		int rangeDeLinhas = contaLinhas;
 		int linhaEscolhida = rand.nextInt(rangeDeLinhas);
 
-		String palavraEscolhida = Files.readAllLines(Paths.get("palavras.txt")).get(linhaEscolhida);
+		String palavraEscolhida = Files.readAllLines(Paths.get(nomeArquivo)).get(linhaEscolhida);
 
 		bReader.close();
 		fReader.close();
@@ -65,12 +66,13 @@ public class JogoDaForca {
 	}
 
 	public static int solicitaQuantidadePalavras(Scanner sc) throws IOException {
-
+		
+		final String PADRAO_NUMEROS_INTEIROS = "^[1-9]\\d*$";
 		while (true) {
 			System.out.print("Peça para um amigo digitar a quantidade de palavras a serem sorteadas " + "\nno jogo: ");
 			String numeroDePalavras = sc.nextLine();
 
-			if (Pattern.matches("^[1-9]\\d*$", numeroDePalavras)) {
+			if (Pattern.matches(PADRAO_NUMEROS_INTEIROS, numeroDePalavras)) {
 				return Integer.parseInt(numeroDePalavras);
 			} else {
 				System.out.println("\nVocê não digitou um número inteiro, tente novamente!\n");
@@ -115,17 +117,17 @@ public class JogoDaForca {
 
 	public static void confirmaVitoria(Scanner sc, String arquivoForca, String novaPalavra) throws IOException {
 		
-		
+		final String PADRAO_PALAVRA = "[a-zA-Z ]+";
 		System.out.println(
 				"\nParabéns, você GANHOU! Agora você tem direito de " + "adicionar uma nova palavra na nossa lista!");
 		
 		do {
 			System.out.print("\nPor favor, digite uma palavra: ");
 			novaPalavra = sc.next();
-			if (!Pattern.matches("[a-zA-Z ]+", novaPalavra)) {
+			if (!Pattern.matches(PADRAO_PALAVRA, novaPalavra)) {
 				System.out.println("\nVocê precisa inserir palavras apenas com letras do alfabeto. Tente novamente!");
 			}
-		} while (!Pattern.matches("[a-zA-Z ]+", novaPalavra));
+		} while (!Pattern.matches(PADRAO_PALAVRA, novaPalavra));
 		
 		incluiPalavraNova(novaPalavra, arquivoForca);
 		System.out.print("\nNova palavra incluída com sucesso!\n\n");
@@ -159,6 +161,8 @@ public class JogoDaForca {
 
 		Scanner sc = new Scanner(System.in);
 		String continuarJogando = "S";
+		final String PADRAO_PALAVRA = "[a-zA-Z]";
+		final String PADRAO_LETRA = "[a-zA-Z]+";
 
 		int qtdPalavras;
 		String letra = "";
@@ -177,7 +181,7 @@ public class JogoDaForca {
 
 			String palavraSorteada = null;
 			palavraSorteada = sorteioPalavra(arquivoForca);
-			System.out.println("\n\nA palavra escolhida é: " + palavraSorteada.replaceAll("[a-zA-Z]", "_ ").trim());
+			System.out.println("\n\nA palavra escolhida é: " + palavraSorteada.replaceAll(PADRAO_PALAVRA, "_ ").trim());
 
 			int qtdErros = 0;
 			String letrasDigitadas = "";
@@ -189,13 +193,13 @@ public class JogoDaForca {
 					System.out.print("\nDigite uma letra: ");
 					letra = retiraAcento(sc.next().toLowerCase());
 
-					if (!Pattern.matches("[a-zA-Z]+", letra) || (letra.length() > 1)) {
+					if (!Pattern.matches(PADRAO_LETRA, letra) || (letra.length() > 1)) {
 						System.out.println(
 								"\nVocê não pode inserir mais que uma letra e essa letra precisa ser pertencente "
 										+ "\nao alfabeto. Tente novamente!");
 					}
 
-				} while (!Pattern.matches("[a-zA-Z]+", letra) || ((letra.length() > 1)));
+				} while (!Pattern.matches(PADRAO_LETRA, letra) || ((letra.length() > 1)));
 
 				if (letrasDigitadas.contains(letra)) {
 					System.out.println("\nA letra " + letra + " já foi utilizada, tente uma letra diferente!");
