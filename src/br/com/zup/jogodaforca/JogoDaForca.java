@@ -13,10 +13,10 @@ import java.util.Scanner;
 
 public class JogoDaForca {
 
-	public static String incluirPalavras(Scanner sc, int quantidadepalavras, String nomeArquivo) throws IOException {
-		
+	public static String incluirPalavras(Scanner sc, int quantidadepalavras, String arquivoForca) throws IOException {
+
 		final String PADRAO_PALAVRA = "[a-zA-Z ]+";
-		FileWriter lista = new FileWriter(nomeArquivo);
+		FileWriter lista = new FileWriter(arquivoForca);
 		String palavra = "";
 
 		for (int i = 0; i < quantidadepalavras; i++) {
@@ -24,7 +24,8 @@ public class JogoDaForca {
 			do {
 				System.out.printf("\nDigite a %dª palavra: ", i + 1);
 				palavra = retiraAcento(sc.nextLine());
-
+				
+				//inclusão de constante para Regex
 				if (!Pattern.matches(PADRAO_PALAVRA, palavra)) {
 					System.out
 							.println("\nVocê precisa inserir palavras apenas com letras do alfabeto. Tente novamente!");
@@ -43,9 +44,9 @@ public class JogoDaForca {
 		return "\nPalavras incluídas com sucesso!\n";
 	}
 
-	public static String sorteioPalavra(String nomeArquivo) throws IOException {
+	public static String sorteioPalavra(String arquivoForca) throws IOException {
 
-		FileReader fReader = new FileReader(nomeArquivo);
+		FileReader fReader = new FileReader(arquivoForca);
 		BufferedReader bReader = new BufferedReader(fReader);
 
 		int contaLinhas = 0;
@@ -57,7 +58,7 @@ public class JogoDaForca {
 		int rangeDeLinhas = contaLinhas;
 		int linhaEscolhida = rand.nextInt(rangeDeLinhas);
 
-		String palavraEscolhida = Files.readAllLines(Paths.get(nomeArquivo)).get(linhaEscolhida);
+		String palavraEscolhida = Files.readAllLines(Paths.get(arquivoForca)).get(linhaEscolhida);
 
 		bReader.close();
 		fReader.close();
@@ -71,7 +72,8 @@ public class JogoDaForca {
 		while (true) {
 			System.out.print("Peça para um amigo digitar a quantidade de palavras a serem sorteadas " + "\nno jogo: ");
 			String numeroDePalavras = sc.nextLine();
-
+			
+			//inclusão de constante para Regex
 			if (Pattern.matches(PADRAO_NUMEROS_INTEIROS, numeroDePalavras)) {
 				return Integer.parseInt(numeroDePalavras);
 			} else {
@@ -103,9 +105,9 @@ public class JogoDaForca {
 
 	}
 
-	public static String incluiPalavraNova(String novaPalavra, String nomeArquivo) throws IOException {
+	public static String incluiPalavraNova(String novaPalavra, String arquivoForca) throws IOException {
 
-		FileWriter fwriter = new FileWriter(nomeArquivo, true);
+		FileWriter fwriter = new FileWriter(arquivoForca, true);
 
 		fwriter.append(retiraAcento(novaPalavra));
 		fwriter.append(String.format("\n"));
@@ -120,29 +122,33 @@ public class JogoDaForca {
 		final String PADRAO_PALAVRA = "[a-zA-Z ]+";
 		System.out.println(
 				"\nParabéns, você GANHOU! Agora você tem direito de " + "adicionar uma nova palavra na nossa lista!");
-		
+
 		do {
 			System.out.print("\nPor favor, digite uma palavra: ");
 			novaPalavra = sc.next();
+			
+			// inclusão de constante para Regex
 			if (!Pattern.matches(PADRAO_PALAVRA, novaPalavra)) {
 				System.out.println("\nVocê precisa inserir palavras apenas com letras do alfabeto. Tente novamente!");
 			}
+			
+			// inclusão de constante para Regex
 		} while (!Pattern.matches(PADRAO_PALAVRA, novaPalavra));
-		
+
 		incluiPalavraNova(novaPalavra, arquivoForca);
 		System.out.print("\nNova palavra incluída com sucesso!\n\n");
 	}
-	
-	private static final String CABECALHO_DO_JOGO = ("-------------------------------------------------------------------------------\n") +
-			("                                 JOGO DA FORCA                                 \n") + ("-------------------------------------------------------------------------------");
-	
+
+	private static final String CABECALHO_DO_JOGO = ("-------------------------------------------------------------------------------\n")
+			+ ("                                 JOGO DA FORCA                                 \n")
+			+ ("-------------------------------------------------------------------------------");
+
 	private static final String REGRAS_DO_JOGO = ("\nVamos às REGRAS:\n\n"
 			+ "--> Tente adivinhar a palavra dizendo as letras que podem existir dentro dela.\n"
-			+ "--> Cada letra acertada será escrita na palavra, errando, você perde 1 chance "
-			+ "\nem um total de 6.\n"
+			+ "--> Cada letra acertada será escrita na palavra, errando, você perde 1 chance " + "\nem um total de 6.\n"
 			+ "--> O jogo termina quando você ganha completando a palavra ou quando você perde"
 			+ "\nutilizando todas as vidas.\n");
-	
+
 	public static String retiraAcento(String str) {
 		String nfdNormalizedString = Normalizer.normalize(str, Normalizer.Form.NFD);
 		Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
@@ -159,21 +165,24 @@ public class JogoDaForca {
 
 	public static void main(String[] args) throws IOException {
 
-		Scanner sc = new Scanner(System.in);
-		String continuarJogando = "S";
 		final String PADRAO_PALAVRA = "[a-zA-Z]";
 		final String PADRAO_LETRA = "[a-zA-Z]+";
+		final int LIMITE_DE_ERROS = 6;
+		
+		Scanner sc = new Scanner(System.in);
 
-		int qtdPalavras;
+		String continuarJogando = "S";
 		String letra = "";
-		boolean acertou;
 		String arquivoForca = "palavras.txt";
-
+		boolean acertou;
+		
+		// inclusão de constante
 		System.out.println(CABECALHO_DO_JOGO);
-
+		
+		// inclusão de constante
 		System.out.println(REGRAS_DO_JOGO);
 
-		qtdPalavras = solicitaQuantidadePalavras(sc);
+		int qtdPalavras = solicitaQuantidadePalavras(sc);
 
 		incluirPalavras(sc, qtdPalavras, arquivoForca);
 
@@ -186,22 +195,26 @@ public class JogoDaForca {
 			int qtdErros = 0;
 			String letrasDigitadas = "";
 			String novaPalavra = "";
-
-			while (qtdErros < 6) {
-
+			
+			// substituição do limite de erros por uma constante
+			while (qtdErros < LIMITE_DE_ERROS) {
+				// condição alterada para boolean
+				boolean padraoLetraIncorreto = !Pattern.matches(PADRAO_LETRA, letra) || (letra.length() > 1);
 				do {
 					System.out.print("\nDigite uma letra: ");
 					letra = retiraAcento(sc.next().toLowerCase());
 
-					if (!Pattern.matches(PADRAO_LETRA, letra) || (letra.length() > 1)) {
+					if (padraoLetraIncorreto) {
 						System.out.println(
 								"\nVocê não pode inserir mais que uma letra e essa letra precisa ser pertencente "
 										+ "\nao alfabeto. Tente novamente!");
 					}
 
-				} while (!Pattern.matches(PADRAO_LETRA, letra) || ((letra.length() > 1)));
-
-				if (letrasDigitadas.contains(letra)) {
+				} while (padraoLetraIncorreto);
+				
+				// inclusão de variável boolean para condição
+				boolean letraRepetida = letrasDigitadas.contains(letra);
+				if (letraRepetida) {
 					System.out.println("\nA letra " + letra + " já foi utilizada, tente uma letra diferente!");
 					System.out.println("Letras já digitadas: " + letrasDigitadas);
 					continue;
@@ -216,31 +229,39 @@ public class JogoDaForca {
 				System.out.println(palavraCompleta);
 
 				if (acertou) {
-
-					if (!palavraCompleta.contains("_")) {
+					//inclusão de boolean em variável para a condição
+					boolean palavraFinalizada = !palavraCompleta.contains("_");
+					if (palavraFinalizada) {
+						
+						//função de confirmar vitória incluída
 						confirmaVitoria(sc, arquivoForca, novaPalavra);
 						break;
 					}
+					
 				} else {
+					
 					qtdErros++;
 					System.out.println("\nLetra inexitente na palavra!");
 					System.out.println("Você errou pela " + qtdErros + "ª vez!");
 				}
-
-				if (qtdErros == 6) {
+				
+				// inclusão de constante de limite de erros
+				if (qtdErros == LIMITE_DE_ERROS) {
 					System.out.println("\nQue pena, você PERDEU! =(");
 				}
 
 			}
-
+			
+			// inclusão de variável boolean para o laço
+			boolean opcaoInvalidaParaContinuarJogo = !continuarJogando.toUpperCase().equals("S") && !continuarJogando.toUpperCase().equals("N");
 			do {
 				System.out.println("\n\nDeseja continuar jogando? (S/N): ");
 				continuarJogando = sc.next();
 
-				if (!continuarJogando.toUpperCase().equals("S") && !continuarJogando.toUpperCase().equals("N")) {
+				if (opcaoInvalidaParaContinuarJogo) {
 					System.out.println("Opção inválida! Voce precisa escolher S para sim ou N para não.");
 				}
-			} while (!continuarJogando.toUpperCase().equals("S") && !continuarJogando.toUpperCase().equals("N"));
+			} while (opcaoInvalidaParaContinuarJogo);
 
 		}
 
