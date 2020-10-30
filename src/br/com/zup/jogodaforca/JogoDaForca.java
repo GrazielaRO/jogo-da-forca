@@ -198,19 +198,18 @@ public class JogoDaForca {
 			
 			// substituição do limite de erros por uma constante
 			while (qtdErros < LIMITE_DE_ERROS) {
-				// condição alterada para boolean
-				boolean padraoLetraIncorreto = !Pattern.matches(PADRAO_LETRA, letra) || (letra.length() > 1);
+			
 				do {
 					System.out.print("\nDigite uma letra: ");
 					letra = retiraAcento(sc.next().toLowerCase());
 
-					if (padraoLetraIncorreto) {
+					if (!Pattern.matches(PADRAO_LETRA, letra) || (letra.length() > 1)) {
 						System.out.println(
 								"\nVocê não pode inserir mais que uma letra e essa letra precisa ser pertencente "
 										+ "\nao alfabeto. Tente novamente!");
 					}
 
-				} while (padraoLetraIncorreto);
+				} while (!Pattern.matches(PADRAO_LETRA, letra) || (letra.length() > 1));
 				
 				// inclusão de variável boolean para condição
 				boolean letraRepetida = letrasDigitadas.contains(letra);
